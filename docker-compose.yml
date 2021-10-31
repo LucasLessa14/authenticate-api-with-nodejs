@@ -1,0 +1,13 @@
+version: "3"
+services:
+  autheticate-api:
+    build: 
+      context: ./api/
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    container_name: autheticate-api
+    ports: 
+      - "3000:3000"
+    volumes: 
+      - ./api:/home/node/app
+      - /home/node/app/node_modules
