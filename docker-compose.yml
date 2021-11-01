@@ -1,13 +1,36 @@
 version: "3"
 services:
+  postgresdb:
+    image: postgres:12
+      container_name: "postgresdb"
+      restart: always
+    environment: 
+      POSTGRES_PASSWORD: docker
+      POSTGRES_USER: docker
+      POSTGRES_DB: blog
+    volumes: 
+      - "./dbpostgres:/var/lib/postgressql/data"
+    ports: 
+      - "5432:5432"
+    networks: 
+      - app-connect
+
   autheticate-api:
     build: 
       context: ./api/
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: always
     container_name: autheticate-api
     ports: 
       - "3000:3000"
     volumes: 
       - ./api:/home/node/app
       - /home/node/app/node_modules
+    depends_on: 
+      - postgresdb
+    networks: 
+      - app-connect
+
+  networks:
+    app-connect:
+      driver: bridge
